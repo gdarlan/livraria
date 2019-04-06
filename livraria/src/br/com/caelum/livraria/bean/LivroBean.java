@@ -18,12 +18,20 @@ import br.com.caelum.livraria.modelo.Livro;
 public class LivroBean {
 
 	private Livro livro = new Livro();
-	private Integer autorId;
 
 	public Livro getLivro() {
 		return livro;
 	}
 
+	private Integer autorId;
+
+	public Integer getAutorId() {
+		return autorId;
+	}
+	
+	public void setAutorId(Integer autorId) {
+		this.autorId = autorId;
+	}
 	public void gravarAutor() {
 		Autor autor = new DAO<Autor>(Autor.class).buscaPorId(autorId);
 		this.livro.adicionaAutor(autor);
@@ -55,7 +63,11 @@ public class LivroBean {
 		limpar();
 
 	}
-
+	
+	public String formAutor() {
+		return "autor?faces-redirect=true";
+	}
+	
 	public void limpar() {
 		this.livro = new Livro();
 	}
@@ -68,12 +80,5 @@ public class LivroBean {
 		}
 	}
 
-	public Integer getAutorId() {
-		return autorId;
-	}
-
-	public void setAutorId(Integer autorId) {
-		this.autorId = autorId;
-	}
 
 }
