@@ -5,7 +5,9 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 
 import br.com.caelum.livraria.dao.DAO;
 import br.com.caelum.livraria.modelo.Autor;
@@ -41,15 +43,29 @@ public class LivroBean {
 
 	public void gravar() {
 		System.out.println("Gravando livro " + this.livro.getTitulo());
+		FacesContext context = FacesContext.getCurrentInstance();
 
 		if (livro.getAutores().isEmpty()) {
-			throw new RuntimeException("Livro deve ter pelo menos um Autor.");
+			context.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Livro deve ter pelo menos um autor", null));
+			return;
 		}
-
 		new DAO<Livro>(Livro.class).adiciona(this.livro);
-
-		FacesContext context = FacesContext.getCurrentInstance();
 		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Livro gravado com sucesso!", null));
+		limpar();
+
+	}
+
+	public void limpar() {
+		this.livro = new Livro();
+	}
+
+	public void comecaComDigitoUm(FacesContext fc, UIComponent component, Object value) throws ValidatorException {
+
+		String valor = value.toString();
+		if (!valor.startsWith("1")) {
+			throw new ValidatorException(new FacesMessage("Deveria começar com 1"));
+		}
 	}
 
 	public Integer getAutorId() {
