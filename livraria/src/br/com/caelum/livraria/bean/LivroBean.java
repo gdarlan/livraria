@@ -28,10 +28,11 @@ public class LivroBean {
 	public Integer getAutorId() {
 		return autorId;
 	}
-	
+
 	public void setAutorId(Integer autorId) {
 		this.autorId = autorId;
 	}
+
 	public void gravarAutor() {
 		Autor autor = new DAO<Autor>(Autor.class).buscaPorId(autorId);
 		this.livro.adicionaAutor(autor);
@@ -50,26 +51,38 @@ public class LivroBean {
 	}
 
 	public void gravar() {
-		System.out.println("Gravando livro " + this.livro.getTitulo());
 		FacesContext context = FacesContext.getCurrentInstance();
-
 		if (livro.getAutores().isEmpty()) {
 			context.addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Livro deve ter pelo menos um autor", null));
 			return;
 		}
-		new DAO<Livro>(Livro.class).adiciona(this.livro);
-		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Livro gravado com sucesso!", null));
+		if(this.livro.getId() == null) {
+			new DAO<Livro>(Livro.class).adiciona(this.livro);
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Livro cadastro com sucesso!", null));
+		}else {
+			new DAO<Livro>(Livro.class).atualiza(this.livro);
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Livro alterado com sucesso!", null));
+		}
 		limpar();
-
 	}
-	
+
+	public void carregar(Livro livro) {
+		this.livro = livro;
+	}
+
 	public String formAutor() {
 		return "autor?faces-redirect=true";
 	}
-	
+
 	public void limpar() {
 		this.livro = new Livro();
+	}
+
+	public void remover(Livro livro) {
+		new DAO<Livro>(Livro.class).remove(livro);
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Livro removido com sucesso", null));
 	}
 
 	public void comecaComDigitoUm(FacesContext fc, UIComponent component, Object value) throws ValidatorException {
@@ -79,6 +92,8 @@ public class LivroBean {
 			throw new ValidatorException(new FacesMessage("Deveria começar com 1"));
 		}
 	}
-
-
+	
+	public void removerAutorDoLivro(Autor autor) {
+		this.livro.removeAutor(autor);
+	}
 }

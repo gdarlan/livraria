@@ -43,68 +43,87 @@
 
 				</h:panelGrid>
 			</fieldset>
-			<fieldset>
-				<legend>Dados do Autor</legend>
-				<h:outputLabel value="Selecione Autor:" for="autor" />
-				<h:selectOneMenu value="#{livroBean.autorId}" id="autor">
-					<f:selectItems value="#{livroBean.autores}" var="autor"
-						itemLabel="#{autor.nome}" itemValue="#{autor.id}" />
-				</h:selectOneMenu>
-				<h:commandButton value="Gravar Autor"
-					action="#{livroBean.gravarAutor}" style="margin-left:05px;">
-					<f:ajax execute="autor" render="tabelaAutores" />
-				</h:commandButton>
-				<br />
-				<h:commandLink action="#{livroBean.formAutor}"
-					value="Cadastrar novo autor" immediate="true" />
+			<div style="margin-top: 5px;">
+				<fieldset>
+					<legend>Dados do Autor</legend>
+					<h:outputLabel value="Selecione Autor:" for="autor" />
+					<h:selectOneMenu value="#{livroBean.autorId}" id="autor">
+						<f:selectItems value="#{livroBean.autores}" var="autor"
+							itemLabel="#{autor.nome}" itemValue="#{autor.id}" />
+					</h:selectOneMenu>
+					<h:commandButton value="Gravar Autor"
+						action="#{livroBean.gravarAutor}" style="margin-left:05px;">
+						<f:ajax execute="autor" render="tabelaAutores" />
+					</h:commandButton>
+					<br />
+					<h:commandLink action="#{livroBean.formAutor}"
+						value="Cadastrar novo autor" immediate="true" />
 
-				<h:dataTable value="#{livroBean.autoresDoLivro}" var="autor"
-					id="tabelaAutores">
-					<h:column>
-						<h:outputText value="#{autor.nome}" />
-					</h:column>
+					<h:dataTable value="#{livroBean.autoresDoLivro}" var="autor"
+						id="tabelaAutores">
+						<h:column>
+							<h:outputText value="#{autor.nome}" />
+						</h:column>
+						<h:column>
+							<h:commandLink action="#{livroBean.removerAutorDoLivro(autor)}"
+								value="X" />
+						</h:column>
+					</h:dataTable>
 
-				</h:dataTable>
-
-			</fieldset>
-			<h:commandButton value="Gravar" action="#{livroBean.gravar()}">
-				<f:ajax execute="@form" render="@form :tabelaLivros" />
+				</fieldset>
+			</div>
+			<h:commandButton value="Gravar" action="#{livroBean.gravar()}"
+				style="margin-top:5px">
+				<f:ajax execute="@form"
+					render="@form :formTabelaLivros:tabelaLivros" />
 			</h:commandButton>
 
 		</h:form>
 		<hr />
-		<h:dataTable value="#{livroBean.livros}" var="autor" id="tabelaLivros">
+		<h:form id="formTabelaLivros">
+			<h:dataTable value="#{livroBean.livros}" var="livro"
+				id="tabelaLivros">
 
-			<h:column>
-				<f:facet name="header">Título</f:facet>
-				<h:outputText value="#{autor.titulo}" />
-			</h:column>
+				<h:column>
+					<f:facet name="header">Título</f:facet>
+					<h:outputText value="#{livro.titulo}" />
+				</h:column>
 
-			<h:column>
-				<f:facet name="header">ISBN</f:facet>
-				<h:outputText value="#{autor.isbn}" />
-			</h:column>
+				<h:column>
+					<f:facet name="header">ISBN</f:facet>
+					<h:outputText value="#{livro.isbn}" />
+				</h:column>
 
-			<h:column>
-				<f:facet name="header">Preço</f:facet>
-				<h:outputText value="#{autor.preco}">
-					<f:convertNumber type="currency" pattern="R$ #0.00"
-						currencySymbol="R$" locale="pt_BR" />
-				</h:outputText>
-			</h:column>
+				<h:column>
+					<f:facet name="header">Preço</f:facet>
+					<h:outputText value="#{livro.preco}">
+						<f:convertNumber type="currency" pattern="R$ #0.00"
+							currencySymbol="R$" locale="pt_BR" />
+					</h:outputText>
+				</h:column>
 
-			<h:column>
-				<f:facet name="header">Data de Lançamento</f:facet>
-				<h:outputText value="#{autor.dataLancamento.time}">
-					<f:convertDateTime pattern="dd/MM/yyyy"
-						timeZone="America/Sao_Paulo" />
-				</h:outputText>
-			</h:column>
+				<h:column>
+					<f:facet name="header">Data</f:facet>
+					<h:outputText value="#{livro.dataLancamento.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo" />
+					</h:outputText>
+				</h:column>
 
-		</h:dataTable>
+				<h:column>
+					<f:facet name="header">Alterarr</f:facet>
+					<h:commandLink value="altera" action="#{livroBean.carregar(livro)}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">Remover</f:facet>
+					<h:commandLink value="remove" action="#{livroBean.remover(livro)}" />
+				</h:column>
+
+			</h:dataTable>
+		</h:form>
 	</ui:define>
 	<ui:define name="rodape">
-		<hr/>
+		<hr />
 		<small>&copy; Copyright 2013, Alura</small>
 	</ui:define>
 </ui:composition>

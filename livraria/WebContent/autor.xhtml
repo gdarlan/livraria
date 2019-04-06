@@ -25,6 +25,28 @@
 				</h:panelGrid>
 			</fieldset>
 		</h:form>
+		<div style="margin-top: 5px;">
+			<fieldset>
+				<legend>Lista de Autores</legend>
+				<h:form id="formTabelaAutores">
+					<h:dataTable value="#{autorBean.autores}" var="autor">
+						<h:column>
+							<f:facet name="header">Nome</f:facet>
+							<h:outputText value="#{autor.nome}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">Remover</f:facet>
+							<h:commandLink action="#{autorBean.remove(autor)}" value="remove" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">Alterar</f:facet>
+							<h:commandLink action="#{autorBean.carregar(autor)}" value="altera" />
+						</h:column>
+					</h:dataTable>
+				</h:form>
+
+			</fieldset>
+		</div>
 	</ui:define>
 	<ui:define name="rodape">
 		<hr />
