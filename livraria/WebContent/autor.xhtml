@@ -6,6 +6,14 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <ui:composition template="_template.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="autorId" value="#{autorBean.autorId}" />
+		<f:viewAction action="#{autorBean.carregarAutorPelaId()}"
+			if="#{param.autorId != null}" />
+	</f:metadata>
+
+
 	<ui:define name="titulo">Novo Autor</ui:define>
 	<ui:define name="conteudo">
 		<h:form>
@@ -18,9 +26,17 @@
 						validatorMessage="Autor deve ter no mínimo 5 caracteres"
 						required="true" requiredMessage="Autor é obrigatório">
 						<f:validateLength minimum="5" />
-						<f:ajax event="blur" />
+						<f:ajax event="blur" render="messagemNome" />
 					</h:inputText>
-					<h:message for="nome" />
+					<h:message for="nome" id="messagemNome" />
+
+					<h:outputLabel value="Email:" for="email" />
+					<h:inputText value="#{autorBean.autor.email}" id="email"
+						required="true" requiredMessage="Email obrigatório">
+						<f:passThroughAttribute name="type" value="email"/>
+					</h:inputText>
+					<h:message for="email" id="messagemEmail" />
+
 					<h:commandButton value="Gravar" action="#{autorBean.gravar()}" />
 				</h:panelGrid>
 			</fieldset>
@@ -40,7 +56,8 @@
 						</h:column>
 						<h:column>
 							<f:facet name="header">Alterar</f:facet>
-							<h:commandLink action="#{autorBean.carregar(autor)}" value="altera" />
+							<h:commandLink action="#{autorBean.carregar(autor)}"
+								value="altera" />
 						</h:column>
 					</h:dataTable>
 				</h:form>
